@@ -1,3 +1,5 @@
+mod variable_expansion;
+
 use crate::{
     align_view,
     document::{
