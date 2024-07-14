@@ -9,6 +9,7 @@ use super::*;
 use helix_core::fuzzy::fuzzy_match;
 use helix_core::indent::MAX_INDENT;
 use helix_core::{line_ending, shellwords::Shellwords};
+use helix_lsp::LanguageServerId;
 use helix_view::document::{read_to_string, DEFAULT_LANGUAGE_NAME};
 use helix_view::editor::{CloseError, ConfigEvent};
 use serde_json::Value;
@@ -339,8 +340,11 @@ fn write_impl(
     let path = path.map(AsRef::as_ref);
 
     if config.insert_final_newline {
-        insert_final_newline(doc, view);
+        insert_final_newline(doc, view.id);
     }
+
+    // Save an undo checkpoint for any outstanding changes.
+    doc.append_changes_to_history(view);
 
     let fmt = if config.auto_format {
         doc.auto_format().map(|fmt| {
@@ -366,13 +370,12 @@ fn write_impl(
     Ok(())
 }
 
-fn insert_final_newline(doc: &mut Document, view: &mut View) {
+fn insert_final_newline(doc: &mut Document, view_id: ViewId) {
     let text = doc.text();
     if line_ending::get_line_ending(&text.slice(..)).is_none() {
         let eof = Selection::point(text.len_chars());
         let insert = Transaction::insert(text, &eof, doc.line_ending.as_str().into());
-        doc.apply(&insert, view.id);
-        doc.append_changes_to_history(view);
+        doc.apply(&insert, view_id);
     }
 }
 
@@ -703,10 +706,14 @@ pub fn write_all_impl(
 
     for (doc_id, target_view) in saves {
         let doc = doc_mut!(cx.editor, &doc_id);
+        let view = view_mut!(cx.editor, target_view);
 
         if config.insert_final_newline {
-            insert_final_newline(doc, view_mut!(cx.editor, target_view));
+            insert_final_newline(doc, target_view);
         }
+
+        // Save an undo checkpoint for any outstanding changes.
+        doc.append_changes_to_history(view);
 
         let fmt = if config.auto_format {
             doc.auto_format().map(|fmt| {
@@ -1370,37 +1377,51 @@ fn lsp_workspace_command(
     if event != PromptEvent::Validate {
         return Ok(());
     }
+
+    struct LsIdCommand(LanguageServerId, helix_lsp::lsp::Command);
+
+    impl ui::menu::Item for LsIdCommand {
+        type Data = ();
+
+        fn format(&self, _data: &Self::Data) -> Row {
+            self.1.title.as_str().into()
+        }
+    }
+
     let doc = doc!(cx.editor);
-    let Some((language_server_id, options)) = doc
+    let ls_id_commands = doc
         .language_servers_with_feature(LanguageServerFeature::WorkspaceCommand)
-        .find_map(|ls| {
+        .flat_map(|ls| {
             ls.capabilities()
                 .execute_command_provider
-                .as_ref()
-                .map(|options| (ls.id(), options))
-        })
-    else {
-        cx.editor
-            .set_status("No active language servers for this document support workspace commands");
-        return Ok(());
-    };
+                .iter()
+                .flat_map(|options| options.commands.iter())
+                .map(|command| (ls.id(), command))
+        });
 
     if args.is_empty() {
-        let commands = options
-            .commands
-            .iter()
-            .map(|command| helix_lsp::lsp::Command {
-                title: command.clone(),
-                command: command.clone(),
-                arguments: None,
+        let commands = ls_id_commands
+            .map(|(ls_id, command)| {
+                LsIdCommand(
+                    ls_id,
+                    helix_lsp::lsp::Command {
+                        title: command.clone(),
+                        command: command.clone(),
+                        arguments: None,
+                    },
+                )
             })
             .collect::<Vec<_>>();
         let callback = async move {
             let call: job::Callback = Callback::EditorCompositor(Box::new(
                 move |_editor: &mut Editor, compositor: &mut Compositor| {
-                    let picker = ui::Picker::new(commands, (), move |cx, command, _action| {
-                        execute_lsp_command(cx.editor, language_server_id, command.clone());
-                    });
+                    let picker = ui::Picker::new(
+                        commands,
+                        (),
+                        move |cx, LsIdCommand(ls_id, command), _action| {
+                            execute_lsp_command(cx.editor, *ls_id, command.clone());
+                        },
+                    );
                     compositor.push(Box::new(overlaid(picker)))
                 },
             ));
@@ -1409,21 +1430,32 @@ fn lsp_workspace_command(
         cx.jobs.callback(callback);
     } else {
         let command = args.join(" ");
-        if options.commands.iter().any(|c| c == &command) {
-            execute_lsp_command(
-                cx.editor,
-                language_server_id,
-                helix_lsp::lsp::Command {
-                    title: command.clone(),
-                    arguments: None,
-                    command,
-                },
-            );
-        } else {
-            cx.editor.set_status(format!(
-                "`{command}` is not supported for this language server"
-            ));
-            return Ok(());
+        let matches: Vec<_> = ls_id_commands
+            .filter(|(_ls_id, c)| *c == &command)
+            .collect();
+
+        match matches.as_slice() {
+            [(ls_id, _command)] => {
+                execute_lsp_command(
+                    cx.editor,
+                    *ls_id,
+                    helix_lsp::lsp::Command {
+                        title: command.clone(),
+                        arguments: None,
+                        command,
+                    },
+                );
+            }
+            [] => {
+                cx.editor.set_status(format!(
+                    "`{command}` is not supported for any language server"
+                ));
+            }
+            _ => {
+                cx.editor.set_status(format!(
+                    "`{command}` supported by multiple language servers"
+                ));
+            }
         }
     }
     Ok(())
