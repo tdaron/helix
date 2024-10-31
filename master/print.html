@@ -237,7 +237,7 @@ To set up Helix:</p>
 </ul>
 </li>
 </ul>
-<p><a href="https://repology.org/project/helix/versions"><img src="https://repology.org/badge/vertical-allrepos/helix.svg" alt="Packaging status" /></a></p>
+<p><a href="https://repology.org/project/helix-editor/versions"><img src="https://repology.org/badge/vertical-allrepos/helix-editor.svg" alt="Packaging status" /></a></p>
 <h2 id="linux"><a class="header" href="#linux">Linux</a></h2>
 <p>The following third party repositories are available:</p>
 <h3 id="ubuntu"><a class="header" href="#ubuntu">Ubuntu</a></h3>
@@ -457,6 +457,21 @@ can be accessed via the command <code>hx --tutor</code> or <code>:tutor</code>.<
 <p>💡 Currently, not all functionality is fully documented, please refer to the
 <a href="./keymap.html">key mappings</a> list.</p>
 </blockquote>
+<h2 id="modes"><a class="header" href="#modes">Modes</a></h2>
+<p>Helix is a modal editor, meaning it has different modes for different tasks. The main modes are:</p>
+<ul>
+<li><a href="./keymap.html#normal-mode">Normal mode</a>: For navigation and editing commands. This is the default mode.</li>
+<li><a href="./keymap.html#insert-mode">Insert mode</a>: For typing text directly into the document. Access by typing <code>i</code> in normal mode.</li>
+<li><a href="./keymap.html#select--extend-mode">Select/extend mode</a>: For making selections and performing operations on them. Access by typing <code>v</code> in normal mode.</li>
+</ul>
+<h2 id="buffers"><a class="header" href="#buffers">Buffers</a></h2>
+<p>Buffers are in-memory representations of files. You can have multiple buffers open at once. Use <a href="./pickers.html">pickers</a> or commands like <code>:buffer-next</code> and <code>:buffer-previous</code> to open buffers or switch between them.</p>
+<h2 id="selection-first-editing"><a class="header" href="#selection-first-editing">Selection-first editing</a></h2>
+<p>Inspired by <a href="http://kakoune.org/">Kakoune</a>, Helix follows the <code>selection → action</code> model. This means that whatever you are going to act on (a word, a paragraph, a line, etc.) is selected first and the action itself (delete, change, yank, etc.) comes second. A cursor is simply a single width selection.</p>
+<h2 id="multiple-selections"><a class="header" href="#multiple-selections">Multiple selections</a></h2>
+<p>Also inspired by Kakoune, multiple selections are a core mode of interaction in Helix. For example, the standard way of replacing multiple instance of a word is to first select all instances (so there is one selection per instance) and then use the change action (<code>c</code>) to edit them all at the same time.</p>
+<h2 id="motions"><a class="header" href="#motions">Motions</a></h2>
+<p>Motions are commands that move the cursor or modify selections. They're used for navigation and text manipulation. Examples include <code>w</code> to move to the next word, or <code>f</code> to find a character. See the <a href="./keymap.html#movement">Movement</a> section of the keymap for more motions.</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="registers"><a class="header" href="#registers">Registers</a></h2>
 <ul>
 <li><a href="registers.html#user-defined-registers">User-defined registers</a></li>
@@ -775,6 +790,9 @@ selection to the "func" <code>identifier</code>.</p>
 <tr><td><code>Alt-i</code>, <code>Alt-down</code></td><td>Shrink syntax tree object selection (<strong>TS</strong>)</td><td><code>shrink_selection</code></td></tr>
 <tr><td><code>Alt-p</code>, <code>Alt-left</code></td><td>Select previous sibling node in syntax tree (<strong>TS</strong>)</td><td><code>select_prev_sibling</code></td></tr>
 <tr><td><code>Alt-n</code>, <code>Alt-right</code></td><td>Select next sibling node in syntax tree (<strong>TS</strong>)</td><td><code>select_next_sibling</code></td></tr>
+<tr><td><code>Alt-a</code></td><td>Select all sibling nodes in syntax tree (<strong>TS</strong>)</td><td><code>select_all_siblings</code></td></tr>
+<tr><td><code>Alt-e</code></td><td>Move to end of parent node in syntax tree (<strong>TS</strong>)</td><td><code>move_parent_node_end</code></td></tr>
+<tr><td><code>Alt-b</code></td><td>Move to start of parent node in syntax tree (<strong>TS</strong>)</td><td><code>move_parent_node_start</code></td></tr>
 </tbody></table>
 </div>
 <h3 id="search"><a class="header" href="#search">Search</a></h3>
@@ -1146,7 +1164,7 @@ See the documentation page on <a href="./pickers.html">pickers</a> for more info
 <tr><td><code>:sort</code></td><td>Sort ranges in selection.</td></tr>
 <tr><td><code>:rsort</code></td><td>Sort ranges in selection in reverse order.</td></tr>
 <tr><td><code>:reflow</code></td><td>Hard-wrap the current selection of lines to a given width.</td></tr>
-<tr><td><code>:tree-sitter-subtree</code>, <code>:ts-subtree</code></td><td>Display tree sitter subtree under cursor, primarily for debugging queries.</td></tr>
+<tr><td><code>:tree-sitter-subtree</code>, <code>:ts-subtree</code></td><td>Display the smallest tree-sitter subtree that spans the primary selection, primarily for debugging queries.</td></tr>
 <tr><td><code>:config-reload</code></td><td>Refresh user config.</td></tr>
 <tr><td><code>:config-open</code></td><td>Open the user config.toml file.</td></tr>
 <tr><td><code>:config-open-workspace</code></td><td>Open the workspace config.toml file.</td></tr>
@@ -1190,6 +1208,7 @@ Languages</a> guide for more language configuration information.</p>
 <tr><td>cairo</td><td>✓</td><td>✓</td><td>✓</td><td><code>cairo-language-server</code></td></tr>
 <tr><td>capnp</td><td>✓</td><td></td><td>✓</td><td></td></tr>
 <tr><td>cel</td><td>✓</td><td></td><td></td><td></td></tr>
+<tr><td>circom</td><td>✓</td><td></td><td></td><td><code>circom-lsp</code></td></tr>
 <tr><td>clojure</td><td>✓</td><td></td><td></td><td><code>clojure-lsp</code></td></tr>
 <tr><td>cmake</td><td>✓</td><td>✓</td><td>✓</td><td><code>cmake-language-server</code></td></tr>
 <tr><td>comment</td><td>✓</td><td></td><td></td><td></td></tr>
@@ -1199,6 +1218,7 @@ Languages</a> guide for more language configuration information.</p>
 <tr><td>crystal</td><td>✓</td><td>✓</td><td></td><td><code>crystalline</code></td></tr>
 <tr><td>css</td><td>✓</td><td></td><td>✓</td><td><code>vscode-css-language-server</code></td></tr>
 <tr><td>cue</td><td>✓</td><td></td><td></td><td><code>cuelsp</code></td></tr>
+<tr><td>cylc</td><td>✓</td><td>✓</td><td>✓</td><td></td></tr>
 <tr><td>d</td><td>✓</td><td>✓</td><td>✓</td><td><code>serve-d</code></td></tr>
 <tr><td>dart</td><td>✓</td><td>✓</td><td>✓</td><td><code>dart</code></td></tr>
 <tr><td>dbml</td><td>✓</td><td></td><td></td><td></td></tr>
@@ -1209,6 +1229,7 @@ Languages</a> guide for more language configuration information.</p>
 <tr><td>dockerfile</td><td>✓</td><td>✓</td><td></td><td><code>docker-langserver</code></td></tr>
 <tr><td>dot</td><td>✓</td><td></td><td></td><td><code>dot-language-server</code></td></tr>
 <tr><td>dtd</td><td>✓</td><td></td><td></td><td></td></tr>
+<tr><td>dune</td><td>✓</td><td></td><td></td><td></td></tr>
 <tr><td>earthfile</td><td>✓</td><td>✓</td><td>✓</td><td><code>earthlyls</code></td></tr>
 <tr><td>edoc</td><td>✓</td><td></td><td></td><td></td></tr>
 <tr><td>eex</td><td>✓</td><td></td><td></td><td></td></tr>
@@ -1219,7 +1240,7 @@ Languages</a> guide for more language configuration information.</p>
 <tr><td>elvish</td><td>✓</td><td></td><td></td><td><code>elvish</code></td></tr>
 <tr><td>env</td><td>✓</td><td>✓</td><td></td><td></td></tr>
 <tr><td>erb</td><td>✓</td><td></td><td></td><td></td></tr>
-<tr><td>erlang</td><td>✓</td><td>✓</td><td></td><td><code>erlang_ls</code></td></tr>
+<tr><td>erlang</td><td>✓</td><td>✓</td><td></td><td><code>erlang_ls</code>, <code>elp</code></td></tr>
 <tr><td>esdl</td><td>✓</td><td></td><td></td><td></td></tr>
 <tr><td>fidl</td><td>✓</td><td></td><td></td><td></td></tr>
 <tr><td>fish</td><td>✓</td><td>✓</td><td>✓</td><td></td></tr>
@@ -1238,7 +1259,7 @@ Languages</a> guide for more language configuration information.</p>
 <tr><td>gjs</td><td>✓</td><td>✓</td><td>✓</td><td><code>typescript-language-server</code>, <code>vscode-eslint-language-server</code>, <code>ember-language-server</code></td></tr>
 <tr><td>gleam</td><td>✓</td><td>✓</td><td></td><td><code>gleam</code></td></tr>
 <tr><td>glimmer</td><td>✓</td><td></td><td></td><td><code>ember-language-server</code></td></tr>
-<tr><td>glsl</td><td>✓</td><td>✓</td><td>✓</td><td></td></tr>
+<tr><td>glsl</td><td>✓</td><td>✓</td><td>✓</td><td><code>glsl_analyzer</code></td></tr>
 <tr><td>gn</td><td>✓</td><td></td><td></td><td></td></tr>
 <tr><td>go</td><td>✓</td><td>✓</td><td>✓</td><td><code>gopls</code>, <code>golangci-lint-langserver</code></td></tr>
 <tr><td>godot-resource</td><td>✓</td><td>✓</td><td></td><td></td></tr>
@@ -1257,7 +1278,7 @@ Languages</a> guide for more language configuration information.</p>
 <tr><td>hocon</td><td>✓</td><td>✓</td><td>✓</td><td></td></tr>
 <tr><td>hoon</td><td>✓</td><td></td><td></td><td></td></tr>
 <tr><td>hosts</td><td>✓</td><td></td><td></td><td></td></tr>
-<tr><td>html</td><td>✓</td><td></td><td></td><td><code>vscode-html-language-server</code></td></tr>
+<tr><td>html</td><td>✓</td><td></td><td></td><td><code>vscode-html-language-server</code>, <code>superhtml</code></td></tr>
 <tr><td>hurl</td><td>✓</td><td>✓</td><td>✓</td><td></td></tr>
 <tr><td>hyprlang</td><td>✓</td><td></td><td>✓</td><td></td></tr>
 <tr><td>idris</td><td></td><td></td><td></td><td><code>idris2-lsp</code></td></tr>
@@ -1334,7 +1355,7 @@ Languages</a> guide for more language configuration information.</p>
 <tr><td>protobuf</td><td>✓</td><td>✓</td><td>✓</td><td><code>bufls</code>, <code>pb</code></td></tr>
 <tr><td>prql</td><td>✓</td><td></td><td></td><td></td></tr>
 <tr><td>purescript</td><td>✓</td><td>✓</td><td></td><td><code>purescript-language-server</code></td></tr>
-<tr><td>python</td><td>✓</td><td>✓</td><td>✓</td><td><code>pylsp</code></td></tr>
+<tr><td>python</td><td>✓</td><td>✓</td><td>✓</td><td><code>ruff</code>, <code>jedi-language-server</code>, <code>pylsp</code></td></tr>
 <tr><td>qml</td><td>✓</td><td></td><td>✓</td><td><code>qmlls</code></td></tr>
 <tr><td>r</td><td>✓</td><td></td><td></td><td><code>R</code></td></tr>
 <tr><td>racket</td><td>✓</td><td></td><td>✓</td><td><code>racket</code></td></tr>
@@ -1355,6 +1376,7 @@ Languages</a> guide for more language configuration information.</p>
 <tr><td>smali</td><td>✓</td><td></td><td>✓</td><td></td></tr>
 <tr><td>smithy</td><td>✓</td><td></td><td></td><td><code>cs</code></td></tr>
 <tr><td>sml</td><td>✓</td><td></td><td></td><td></td></tr>
+<tr><td>snakemake</td><td>✓</td><td></td><td>✓</td><td><code>pylsp</code></td></tr>
 <tr><td>solidity</td><td>✓</td><td>✓</td><td></td><td><code>solc</code></td></tr>
 <tr><td>spicedb</td><td>✓</td><td></td><td></td><td></td></tr>
 <tr><td>sql</td><td>✓</td><td>✓</td><td></td><td></td></tr>
@@ -2151,7 +2173,6 @@ berry = "#2A2A4D"
 <tr><td><code>ui.debug.active</code></td><td>Indicator for the line at which debugging execution is paused at, found in the gutter</td></tr>
 <tr><td><code>ui.gutter</code></td><td>Gutter</td></tr>
 <tr><td><code>ui.gutter.selected</code></td><td>Gutter for the line the cursor is on</td></tr>
-<tr><td><code>ui.highlight.frameline</code></td><td>Line at which debugging execution is paused at</td></tr>
 <tr><td><code>ui.linenr</code></td><td>Line numbers</td></tr>
 <tr><td><code>ui.linenr.selected</code></td><td>Line number for the line the cursor is on</td></tr>
 <tr><td><code>ui.statusline</code></td><td>Statusline</td></tr>
@@ -2188,6 +2209,7 @@ berry = "#2A2A4D"
 <tr><td><code>ui.selection</code></td><td>For selections in the editing area</td></tr>
 <tr><td><code>ui.selection.primary</code></td><td></td></tr>
 <tr><td><code>ui.highlight</code></td><td>Highlighted lines in the picker preview</td></tr>
+<tr><td><code>ui.highlight.frameline</code></td><td>Line at which debugging execution is paused at</td></tr>
 <tr><td><code>ui.cursorline.primary</code></td><td>The line of the primary cursor (<a href="./configuration.html#editor-section">if cursorline is enabled</a>)</td></tr>
 <tr><td><code>ui.cursorline.secondary</code></td><td>The lines of any other cursors (<a href="./configuration.html#editor-section">if cursorline is enabled</a>)</td></tr>
 <tr><td><code>ui.cursorcolumn.primary</code></td><td>The column of the primary cursor (<a href="./configuration.html#editor-section">if cursorcolumn is enabled</a>)</td></tr>
