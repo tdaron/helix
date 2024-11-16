@@ -12,10 +12,10 @@ Helix provides several variables that can be used when typing commands or creati
 | `%{basename}` or `%{b}` | The name and extension of the currently focused file. |
 | `%{dirname}`  or `%{d}` | The absolute path of the parent directory of the currently focused file. |
 | `%{cwd}`                | The absolute path of the current working directory of Helix. |
-| `%{git_repo}`           | The absolute path of the git repository helix is opened in. Fallback to `cwd` if not inside a git repository|
+| `%{repo}`               | The absolute path of the VCS repository helix is opened in. Fallback to `cwd` if not inside a VCS repository|
 | `%{filename}` or `%{f}` | The absolute path of the currently focused file. |
 | `%{filename:rel}`       | The relative path of the file according to `cwd` (will give absolute path if the file is not a child of the current working directory) |
-| `%{filename:git_rel}`   | The relative path of the file according to `git_repo` (will give absolute path if the file is not a child of the git directory or the cwd) |
+| `%{filename:repo_rel}`  | The relative path of the file according to `repo` (will give absolute path if the file is not a child of the VCS directory or the cwd) |
 | `%{ext}`                | The extension of the current file |
 | `%{lang}`               | The language of the current file   |
 | `%{linenumber}`         | The line number where the primary cursor is positioned. |
