@@ -1,10 +1,17 @@
 # Commands
 
-Command mode can be activated by pressing `:`. The built-in commands are:
+- [Typable commands](#typable-commands)
+  - [Using variables](#using-variables-in-typable-commands)
+- [Static commands](#static-commands)
+
+## Typable commands
+
+Typable commands are used from command mode and may take arguments. Command mode can be activated by pressing `:`. The built-in typable commands are:
 
 {{#include ./generated/typable-cmd.md}}
 
-## Using variables in typed commands and mapped shortcuts
+### Using variables in typable commands
+
 Helix provides several variables that can be used when typing commands or creating custom shortcuts. These variables are listed below:
 
 | Variable                | Description |
@@ -23,10 +30,16 @@ Helix provides several variables that can be used when typing commands or creati
 | `%{selection}`          | The text selected by the primary cursor. |
 | `%sh{cmd}`              | Executes `cmd` with the default shell and returns the command output, if any. |
 
-### Example
+#### Example
+
 ```toml
 [keys.normal]
 # Print blame info for the line where the main cursor is.
 C-b = ":echo %sh{git blame -L %{linenumber} %{filename}}"
 ```
   
+## Static Commands
+
+Static commands take no arguments and can be bound to keys. Static commands can also be executed from the command picker (`<space>?`). The built-in static commands are:
+
+{{#include ./generated/static-cmd.md}}

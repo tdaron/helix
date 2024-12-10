@@ -98,7 +98,7 @@ pub struct Context<'a> {
     pub jobs: &'a mut Jobs,
 }
 
-impl<'a> Context<'a> {
+impl Context<'_> {
     /// Push a new component onto the compositor.
     pub fn push_layer(&mut self, component: Box<dyn Component>) {
         self.callback
@@ -3503,10 +3503,13 @@ fn open(cx: &mut Context, open: Open) {
             )
         };
 
-        let continue_comment_token = doc
-            .language_config()
-            .and_then(|config| config.comment_tokens.as_ref())
-            .and_then(|tokens| comment::get_comment_token(text, tokens, cursor_line));
+        let continue_comment_token = if doc.config.load().continue_comments {
+            doc.language_config()
+                .and_then(|config| config.comment_tokens.as_ref())
+                .and_then(|tokens| comment::get_comment_token(text, tokens, cursor_line))
+        } else {
+            None
+        };
 
         let line = text.line(cursor_line);
         let indent = match line.first_non_whitespace_char() {
@@ -3978,27 +3981,22 @@ pub mod insert {
             let curr = contents.get_char(pos).unwrap_or(' ');
 
             let current_line = text.char_to_line(pos);
-            let line_is_only_whitespace = text
-                .line(current_line)
-                .chars()
-                .all(|char| char.is_ascii_whitespace());
+            let line_start = text.line_to_char(current_line);
 
             let mut new_text = String::new();
 
-            let continue_comment_token = doc
-                .language_config()
-                .and_then(|config| config.comment_tokens.as_ref())
-                .and_then(|tokens| comment::get_comment_token(text, tokens, current_line));
-
-            // If the current line is all whitespace, insert a line ending at the beginning of
-            // the current line. This makes the current line empty and the new line contain the
-            // indentation of the old line.
-            let (from, to, local_offs) = if line_is_only_whitespace {
-                let line_start = text.line_to_char(current_line);
-                new_text.push_str(doc.line_ending.as_str());
-
-                (line_start, line_start, new_text.chars().count())
+            let continue_comment_token = if doc.config.load().continue_comments {
+                doc.language_config()
+                    .and_then(|config| config.comment_tokens.as_ref())
+                    .and_then(|tokens| comment::get_comment_token(text, tokens, current_line))
             } else {
+                None
+            };
+
+            let (from, to, local_offs) = if let Some(idx) =
+                text.slice(line_start..pos).last_non_whitespace_char()
+            {
+                let first_trailing_whitespace_char = (line_start + idx + 1).min(pos);
                 let line = text.line(current_line);
 
                 let indent = match line.first_non_whitespace_char() {
@@ -4051,20 +4049,34 @@ pub mod insert {
                     new_text.chars().count()
                 };
 
-                (pos, pos, local_offs)
+                (
+                    first_trailing_whitespace_char,
+                    pos,
+                    // Note that `first_trailing_whitespace_char` is at least `pos` so the
+                    // unsigned subtraction (`pos - first_trailing_whitespace_char`) cannot
+                    // underflow.
+                    local_offs as isize - (pos - first_trailing_whitespace_char) as isize,
+                )
+            } else {
+                // If the current line is all whitespace, insert a line ending at the beginning of
+                // the current line. This makes the current line empty and the new line contain the
+                // indentation of the old line.
+                new_text.push_str(doc.line_ending.as_str());
+
+                (line_start, line_start, new_text.chars().count() as isize)
             };
 
             let new_range = if range.cursor(text) > range.anchor {
                 // when appending, extend the range by local_offs
                 Range::new(
                     range.anchor + global_offs,
-                    range.head + local_offs + global_offs,
+                    (range.head as isize + local_offs) as usize + global_offs,
                 )
             } else {
                 // when inserting, slide the range by local_offs
                 Range::new(
-                    range.anchor + local_offs + global_offs,
-                    range.head + local_offs + global_offs,
+                    (range.anchor as isize + local_offs) as usize + global_offs,
+                    (range.head as isize + local_offs) as usize + global_offs,
                 )
             };
 
