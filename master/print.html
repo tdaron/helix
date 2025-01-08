@@ -280,7 +280,7 @@ mv helix-*.AppImage "$HOME/.local/bin/hx"
 <pre><code class="language-sh">brew install helix
 </code></pre>
 <h3 id="macports"><a class="header" href="#macports">MacPorts</a></h3>
-<pre><code class="language-sh">port install helix
+<pre><code class="language-sh">sudo port install helix
 </code></pre>
 <h2 id="windows"><a class="header" href="#windows">Windows</a></h2>
 <p>Install on Windows using <a href="https://learn.microsoft.com/en-us/windows/package-manager/winget/">Winget</a>, <a href="https://scoop.sh/">Scoop</a>, <a href="https://chocolatey.org/">Chocolatey</a>
@@ -455,7 +455,7 @@ can be accessed via the command <code>hx --tutor</code> or <code>:tutor</code>.<
 <h2 id="selection-first-editing"><a class="header" href="#selection-first-editing">Selection-first editing</a></h2>
 <p>Inspired by <a href="http://kakoune.org/">Kakoune</a>, Helix follows the <code>selection → action</code> model. This means that whatever you are going to act on (a word, a paragraph, a line, etc.) is selected first and the action itself (delete, change, yank, etc.) comes second. A cursor is simply a single width selection.</p>
 <h2 id="multiple-selections"><a class="header" href="#multiple-selections">Multiple selections</a></h2>
-<p>Also inspired by Kakoune, multiple selections are a core mode of interaction in Helix. For example, the standard way of replacing multiple instance of a word is to first select all instances (so there is one selection per instance) and then use the change action (<code>c</code>) to edit them all at the same time.</p>
+<p>Also inspired by Kakoune, multiple selections are a core mode of interaction in Helix. For example, the standard way of replacing multiple instances of a word is to first select all instances (so there is one selection per instance) and then use the change action (<code>c</code>) to edit them all at the same time.</p>
 <h2 id="motions"><a class="header" href="#motions">Motions</a></h2>
 <p>Motions are commands that move the cursor or modify selections. They're used for navigation and text manipulation. Examples include <code>w</code> to move to the next word, or <code>f</code> to find a character. See the <a href="./keymap.html#movement">Movement</a> section of the keymap for more motions.</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="registers"><a class="header" href="#registers">Registers</a></h2>
@@ -1470,6 +1470,8 @@ See the documentation page on <a href="./pickers.html">pickers</a> for more info
 <tr><td><code>command_palette</code></td><td>Open command palette</td><td>normal: <code>&lt;space&gt;?</code>, select: <code>&lt;space&gt;?</code></td></tr>
 <tr><td><code>goto_word</code></td><td>Jump to a two-character label</td><td>normal: <code>gw</code></td></tr>
 <tr><td><code>extend_to_word</code></td><td>Extend to a two-character label</td><td>select: <code>gw</code></td></tr>
+<tr><td><code>goto_next_tabstop</code></td><td>goto next snippet placeholder</td><td></td></tr>
+<tr><td><code>goto_prev_tabstop</code></td><td>goto next snippet placeholder</td><td></td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h2 id="language-support"><a class="header" href="#language-support">Language Support</a></h2>
 <p>The following languages and Language Servers are supported. To use
@@ -1594,6 +1596,7 @@ Languages</a> guide for more language configuration information.</p>
 <tr><td>kdl</td><td>✓</td><td>✓</td><td>✓</td><td></td></tr>
 <tr><td>koka</td><td>✓</td><td></td><td>✓</td><td><code>koka</code></td></tr>
 <tr><td>kotlin</td><td>✓</td><td></td><td></td><td><code>kotlin-language-server</code></td></tr>
+<tr><td>koto</td><td>✓</td><td>✓</td><td>✓</td><td><code>koto-ls</code></td></tr>
 <tr><td>latex</td><td>✓</td><td>✓</td><td></td><td><code>texlab</code></td></tr>
 <tr><td>ld</td><td>✓</td><td></td><td>✓</td><td></td></tr>
 <tr><td>ldif</td><td>✓</td><td></td><td></td><td></td></tr>
@@ -1618,6 +1621,7 @@ Languages</a> guide for more language configuration information.</p>
 <tr><td>msbuild</td><td>✓</td><td></td><td>✓</td><td></td></tr>
 <tr><td>nasm</td><td>✓</td><td>✓</td><td></td><td></td></tr>
 <tr><td>nestedtext</td><td>✓</td><td>✓</td><td>✓</td><td></td></tr>
+<tr><td>nginx</td><td>✓</td><td></td><td></td><td></td></tr>
 <tr><td>nickel</td><td>✓</td><td></td><td>✓</td><td><code>nls</code></td></tr>
 <tr><td>nim</td><td>✓</td><td>✓</td><td>✓</td><td><code>nimlangserver</code></td></tr>
 <tr><td>nix</td><td>✓</td><td>✓</td><td></td><td><code>nil</code>, <code>nixd</code></td></tr>
@@ -1625,7 +1629,7 @@ Languages</a> guide for more language configuration information.</p>
 <tr><td>nunjucks</td><td>✓</td><td></td><td></td><td></td></tr>
 <tr><td>ocaml</td><td>✓</td><td></td><td>✓</td><td><code>ocamllsp</code></td></tr>
 <tr><td>ocaml-interface</td><td>✓</td><td></td><td></td><td><code>ocamllsp</code></td></tr>
-<tr><td>odin</td><td>✓</td><td></td><td>✓</td><td><code>ols</code></td></tr>
+<tr><td>odin</td><td>✓</td><td>✓</td><td>✓</td><td><code>ols</code></td></tr>
 <tr><td>ohm</td><td>✓</td><td>✓</td><td>✓</td><td></td></tr>
 <tr><td>opencl</td><td>✓</td><td>✓</td><td>✓</td><td><code>clangd</code></td></tr>
 <tr><td>openscad</td><td>✓</td><td></td><td></td><td><code>openscad-lsp</code></td></tr>
@@ -1687,14 +1691,14 @@ Languages</a> guide for more language configuration information.</p>
 <tr><td>tact</td><td>✓</td><td>✓</td><td>✓</td><td></td></tr>
 <tr><td>task</td><td>✓</td><td></td><td></td><td></td></tr>
 <tr><td>tcl</td><td>✓</td><td></td><td>✓</td><td></td></tr>
-<tr><td>teal</td><td>✓</td><td></td><td></td><td></td></tr>
+<tr><td>teal</td><td>✓</td><td></td><td></td><td><code>teal-language-server</code></td></tr>
 <tr><td>templ</td><td>✓</td><td></td><td></td><td><code>templ</code></td></tr>
 <tr><td>textproto</td><td>✓</td><td>✓</td><td>✓</td><td></td></tr>
 <tr><td>tfvars</td><td>✓</td><td></td><td>✓</td><td><code>terraform-ls</code></td></tr>
 <tr><td>thrift</td><td>✓</td><td></td><td></td><td></td></tr>
 <tr><td>todotxt</td><td>✓</td><td></td><td></td><td></td></tr>
 <tr><td>toml</td><td>✓</td><td>✓</td><td></td><td><code>taplo</code></td></tr>
-<tr><td>tsq</td><td>✓</td><td></td><td></td><td></td></tr>
+<tr><td>tsq</td><td>✓</td><td></td><td></td><td><code>ts_query_ls</code></td></tr>
 <tr><td>tsx</td><td>✓</td><td>✓</td><td>✓</td><td><code>typescript-language-server</code></td></tr>
 <tr><td>twig</td><td>✓</td><td></td><td></td><td></td></tr>
 <tr><td>typescript</td><td>✓</td><td>✓</td><td>✓</td><td><code>typescript-language-server</code></td></tr>
@@ -1798,7 +1802,7 @@ Its settings will be merged with the configuration directory <code>config.toml</
 <tr><td><code>line-number</code></td><td>Line number display: <code>absolute</code> simply shows each line's number, while <code>relative</code> shows the distance from the current line. When unfocused or in insert mode, <code>relative</code> will still show absolute line numbers</td><td><code>absolute</code></td></tr>
 <tr><td><code>cursorline</code></td><td>Highlight all lines with a cursor</td><td><code>false</code></td></tr>
 <tr><td><code>cursorcolumn</code></td><td>Highlight all columns with a cursor</td><td><code>false</code></td></tr>
-<tr><td><code>continue-comments</code></td><td>if helix should automatically add a line comment token if you create a new line inside a comment.</td><td><code>false</code></td></tr>
+<tr><td><code>continue-comments</code></td><td>if helix should automatically add a line comment token if you create a new line inside a comment.</td><td><code>true</code></td></tr>
 <tr><td><code>gutters</code></td><td>Gutters to display: Available are <code>diagnostics</code> and <code>diff</code> and <code>line-numbers</code> and <code>spacer</code>, note that <code>diagnostics</code> also includes other features like breakpoints, 1-width padding will be inserted if gutters is non-empty</td><td><code>["diagnostics", "spacer", "line-numbers", "spacer", "diff"]</code></td></tr>
 <tr><td><code>auto-completion</code></td><td>Enable automatic pop up of auto-completion</td><td><code>true</code></td></tr>
 <tr><td><code>path-completion</code></td><td>Enable filepath completion. Show files and directories if an existing path at the cursor was recognized, either absolute or relative to the current opened document or current working directory (if the buffer is not yet saved). Defaults to true.</td><td><code>true</code></td></tr>
@@ -1893,7 +1897,8 @@ mode.select = "SELECT"
 <h3 id="editorlsp-section"><a class="header" href="#editorlsp-section"><code>[editor.lsp]</code> Section</a></h3>
 <div class="table-wrapper"><table><thead><tr><th>Key</th><th>Description</th><th>Default</th></tr></thead><tbody>
 <tr><td><code>enable</code></td><td>Enables LSP integration. Setting to false will completely disable language servers regardless of language settings.</td><td><code>true</code></td></tr>
-<tr><td><code>display-messages</code></td><td>Display LSP progress messages below statusline<sup class="footnote-reference"><a href="#1">1</a></sup></td><td><code>false</code></td></tr>
+<tr><td><code>display-messages</code></td><td>Display LSP <code>window/showMessage</code> messages below statusline<sup class="footnote-reference"><a href="#1">1</a></sup></td><td><code>true</code></td></tr>
+<tr><td><code>display-progress-messages</code></td><td>Display LSP progress messages below statusline<sup class="footnote-reference"><a href="#1">1</a></sup></td><td><code>false</code></td></tr>
 <tr><td><code>auto-signature-help</code></td><td>Enable automatic popup of signature help (parameter hints)</td><td><code>true</code></td></tr>
 <tr><td><code>display-inlay-hints</code></td><td>Display inlay hints<sup class="footnote-reference"><a href="#2">2</a></sup></td><td><code>false</code></td></tr>
 <tr><td><code>display-signature-help-docs</code></td><td>Display docs under signature help popup</td><td><code>true</code></td></tr>
@@ -2122,6 +2127,7 @@ S-tab = "extend_parent_node_start"
 <tr><td><code>max-diagnostics</code></td><td>Maximum number of diagnostics to render inline for a given line</td><td><code>10</code></td></tr>
 </tbody></table>
 </div>
+<p>The allowed values for <code>cursor-line</code> and <code>other-lines</code> are: <code>error</code>, <code>warning</code>, <code>info</code>, <code>hint</code>.</p>
 <p>The (first) diagnostic with the highest severity that is not shown inline is rendered at the end of the line (as long as its severity is higher than the <code>end-of-line-diagnostics</code> config option):</p>
 <pre><code>fn main() {
   let baz = 1;
@@ -2239,7 +2245,7 @@ berry = "#2A2A4D"
 <h3 id="scopes"><a class="header" href="#scopes">Scopes</a></h3>
 <p>The following is a list of scopes available to use for styling:</p>
 <h4 id="syntax-highlighting"><a class="header" href="#syntax-highlighting">Syntax highlighting</a></h4>
-<p>These keys match <a href="https://tree-sitter.github.io/tree-sitter/syntax-highlighting#theme">tree-sitter scopes</a>.</p>
+<p>These keys match <a href="https://tree-sitter.github.io/tree-sitter/3-syntax-highlighting.html#highlights">tree-sitter scopes</a>.</p>
 <p>When determining styling for a highlight, the longest matching theme key will be used. For example, if the highlight is <code>function.builtin.static</code>, the key <code>function.builtin</code> will be used instead of <code>function</code>.</p>
 <p>We use a similar set of scopes as
 <a href="https://www.sublimetext.com/docs/scope_naming.html">Sublime Text</a>. See also
@@ -2513,6 +2519,7 @@ berry = "#2A2A4D"
 <tr><td><code>ui.text.focus</code></td><td>The currently selected line in the picker</td></tr>
 <tr><td><code>ui.text.inactive</code></td><td>Same as <code>ui.text</code> but when the text is inactive (e.g. suggestions)</td></tr>
 <tr><td><code>ui.text.info</code></td><td>The key: command text in <code>ui.popup.info</code> boxes</td></tr>
+<tr><td><code>ui.text.directory</code></td><td>Directory names in prompt completion</td></tr>
 <tr><td><code>ui.virtual.ruler</code></td><td>Ruler columns (see the <a href="./configuration.html#editor-section"><code>editor.rulers</code> config</a>)</td></tr>
 <tr><td><code>ui.virtual.whitespace</code></td><td>Visible whitespace characters</td></tr>
 <tr><td><code>ui.virtual.indent-guide</code></td><td>Vertical indent width guides</td></tr>
@@ -2543,6 +2550,7 @@ berry = "#2A2A4D"
 <tr><td><code>diagnostic.error</code></td><td>Diagnostics error (editing area)</td></tr>
 <tr><td><code>diagnostic.unnecessary</code></td><td>Diagnostics with unnecessary tag (editing area)</td></tr>
 <tr><td><code>diagnostic.deprecated</code></td><td>Diagnostics with deprecated tag (editing area)</td></tr>
+<tr><td><code>tabstop</code></td><td>Snippet placeholder</td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h2 id="key-remapping"><a class="header" href="#key-remapping">Key remapping</a></h2>
 <p>Helix currently supports one-way key remapping through a simple TOML configuration
@@ -2625,7 +2633,6 @@ Cmd-s = ":write" # Cmd or Win or Meta and 's' to write
 <tr><td>Backspace</td><td><code>"backspace"</code></td></tr>
 <tr><td>Space</td><td><code>"space"</code></td></tr>
 <tr><td>Return/Enter</td><td><code>"ret"</code></td></tr>
-<tr><td>-</td><td><code>"minus"</code></td></tr>
 <tr><td>Left</td><td><code>"left"</code></td></tr>
 <tr><td>Right</td><td><code>"right"</code></td></tr>
 <tr><td>Up</td><td><code>"up"</code></td></tr>
@@ -2642,6 +2649,13 @@ Cmd-s = ":write" # Cmd or Win or Meta and 's' to write
 </tbody></table>
 </div>
 <p>Keys can be disabled by binding them to the <code>no_op</code> command.</p>
+<p>All other keys such as <code>?</code>, <code>!</code>, <code>-</code> etc. can be used literally:</p>
+<pre><code class="language-toml">[keys.normal]
+"?" = ":write"
+"!" = ":write"
+"-" = ":write"
+</code></pre>
+<p>Note: <code>-</code> can't be used when combined with a modifier, for example <code>Alt</code> + <code>-</code> should be written as <code>A-minus</code>. <code>A--</code> is not accepted.</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="languages"><a class="header" href="#languages">Languages</a></h2>
 <p>Language-specific settings and settings for language servers are configured
 in <code>languages.toml</code> files.</p>
@@ -2692,12 +2706,12 @@ language-servers = [ "mylang-lsp" ]
 <tr><td><code>name</code></td><td>The name of the language</td></tr>
 <tr><td><code>language-id</code></td><td>The language-id for language servers, checkout the table at <a href="https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocumentItem">TextDocumentItem</a> for the right id</td></tr>
 <tr><td><code>scope</code></td><td>A string like <code>source.js</code> that identifies the language. Currently, we strive to match the scope names used by popular TextMate grammars and by the Linguist library. Usually <code>source.&lt;name&gt;</code> or <code>text.&lt;name&gt;</code> in case of markup languages</td></tr>
-<tr><td><code>injection-regex</code></td><td>regex pattern that will be tested against a language name in order to determine whether this language should be used for a potential <a href="https://tree-sitter.github.io/tree-sitter/syntax-highlighting#language-injection">language injection</a> site.</td></tr>
+<tr><td><code>injection-regex</code></td><td>regex pattern that will be tested against a language name in order to determine whether this language should be used for a potential <a href="https://tree-sitter.github.io/tree-sitter/3-syntax-highlighting.html#language-injection">language injection</a> site.</td></tr>
 <tr><td><code>file-types</code></td><td>The filetypes of the language, for example <code>["yml", "yaml"]</code>. See the file-type detection section below.</td></tr>
 <tr><td><code>shebangs</code></td><td>The interpreters from the shebang line, for example <code>["sh", "bash"]</code></td></tr>
 <tr><td><code>roots</code></td><td>A set of marker files to look for when trying to find the workspace root. For example <code>Cargo.lock</code>, <code>yarn.lock</code></td></tr>
 <tr><td><code>auto-format</code></td><td>Whether to autoformat this language when saving</td></tr>
-<tr><td><code>diagnostic-severity</code></td><td>Minimal severity of diagnostic for it to be displayed. (Allowed values: <code>Error</code>, <code>Warning</code>, <code>Info</code>, <code>Hint</code>)</td></tr>
+<tr><td><code>diagnostic-severity</code></td><td>Minimal severity of diagnostic for it to be displayed. (Allowed values: <code>error</code>, <code>warning</code>, <code>info</code>, <code>hint</code>)</td></tr>
 <tr><td><code>comment-tokens</code></td><td>The tokens to use as a comment token, either a single token <code>"//"</code> or an array <code>["//", "///", "//!"]</code> (the first token will be used for commenting). Also configurable as <code>comment-token</code> for backwards compatibility</td></tr>
 <tr><td><code>block-comment-tokens</code></td><td>The start and end tokens for a multiline comment either an array or single table of <code>{ start = "/*", end = "*/"}</code>. The first set of tokens will be used for commenting, any pairs in the array can be uncommented</td></tr>
 <tr><td><code>indent</code></td><td>The indent to use. Has sub keys <code>unit</code> (the text inserted into the document when indenting; usually set to N spaces or <code>"\t"</code> for tabs) and <code>tab-width</code> (the number of spaces rendered for a tab)</td></tr>
@@ -2880,7 +2894,7 @@ you will need to add queries.</li>
 <li>Create a new directory for the language with the path
 <code>runtime/queries/&lt;name&gt;/</code>.</li>
 <li>Refer to the
-<a href="https://tree-sitter.github.io/tree-sitter/syntax-highlighting#queries">tree-sitter website</a>
+<a href="https://tree-sitter.github.io/tree-sitter/3-syntax-highlighting.html#highlights">tree-sitter website</a>
 for more information on writing queries.</li>
 <li>A list of highlight captures can be found <a href="https://docs.helix-editor.com/themes.html#scopes">on the themes page</a>.</li>
 </ol>
@@ -2906,13 +2920,13 @@ remove the compiled parser located at <code>runtime/grammars/&lt;name&gt;.so</co
 These textobjects require an accompanying tree-sitter grammar and a <code>textobjects.scm</code> query file
 to work properly. Tree-sitter allows us to query the source code syntax tree
 and capture specific parts of it. The queries are written in a lisp dialect.
-More information on how to write queries can be found in the <a href="https://tree-sitter.github.io/tree-sitter/using-parsers#query-syntax">official tree-sitter
+More information on how to write queries can be found in the <a href="https://tree-sitter.github.io/tree-sitter/using-parsers/queries/1-syntax.html">official tree-sitter
 documentation</a>.</p>
 <p>Query files should be placed in <code>runtime/queries/{language}/textobjects.scm</code>
 when contributing to Helix. Note that to test the query files locally you should put
 them under your local runtime directory (<code>~/.config/helix/runtime</code> on Linux
 for example).</p>
-<p>The following <a href="https://tree-sitter.github.io/tree-sitter/using-parsers#capturing-nodes">captures</a> are recognized:</p>
+<p>The following <a href="https://tree-sitter.github.io/tree-sitter/using-parsers/queries/2-operators.html#capturing-nodes">captures</a> are recognized:</p>
 <div class="table-wrapper"><table><thead><tr><th>Capture Name</th></tr></thead><tbody>
 <tr><td><code>function.inside</code></td></tr>
 <tr><td><code>function.around</code></td></tr>
@@ -3272,7 +3286,7 @@ line. (Note these scopes are the defaults for <code>@indent</code> and <code>@ou
 written explicitly for demonstration.)</p>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="adding-injection-queries"><a class="header" href="#adding-injection-queries">Adding Injection Queries</a></h2>
 <p>Writing language injection queries allows one to highlight a specific node as a different language.
-In addition to the <a href="http://tree-sitter.github.io/tree-sitter/syntax-highlighting#language-injection">standard</a> language injection options used by tree-sitter, there
+In addition to the <a href="https://tree-sitter.github.io/tree-sitter/3-syntax-highlighting.html#language-injection">standard</a> language injection options used by tree-sitter, there
 are a few Helix specific extensions that allow for more control.</p>
 <p>And example of a simple query that would highlight all strings as bash in Nix:</p>
 <pre><code class="language-scm">((string_expression (string_fragment) @injection.content)
